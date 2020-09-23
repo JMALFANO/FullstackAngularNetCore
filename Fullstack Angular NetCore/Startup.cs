@@ -1,3 +1,4 @@
+using Fullstack_Angular_NetCore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fullstack_Angular_NetCore
 {
@@ -26,6 +28,11 @@ namespace Fullstack_Angular_NetCore
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+
+            var connection = @"Server=localhost\SQLEXPRESS;Database=FullstackAngularNetCore; Trusted_COnnection=True; connectRetryCount=0;";
+            services.AddDbContext<MyDBContext>(options => options.UseSqlServer(connection));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
