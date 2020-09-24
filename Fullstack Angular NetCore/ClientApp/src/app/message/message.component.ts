@@ -4,7 +4,6 @@ import { Component, Input } from '@angular/core';
   selector: 'app-message',
   templateUrl: './message.component.html'
 })
-
 export class MessageComponent {
   @Input() oMessage: Message;
 }
@@ -14,3 +13,9 @@ interface Message {
   Name: string;
   Message: string;
 }
+
+
+
+
+
+

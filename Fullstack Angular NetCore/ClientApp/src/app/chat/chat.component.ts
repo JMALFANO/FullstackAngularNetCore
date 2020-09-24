@@ -1,5 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ChatService } from '../service/chat.service';
+import { Message } from '../Interfaces';
+import { Observable } from 'rxjs/internal/Observable';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'chat-app',
@@ -8,17 +12,34 @@ import { HttpClient } from '@angular/common/http';
 
 export class ChatComponent{
 
-  public lstMessages: Message[];
+  public lstMessages: Observable<Message[]>;
 
-    constructor(http: HttpClient, @Inject("BASE_URL") baseUrl: string) {
-      http.get<Message[]>(baseUrl + "api/Chat/Message").subscribe(result => {
-        this.lstMessages = result;
-      }, error => console.error(error));
-    }
-}
+  nameControl = new FormControl('');
+  textControl = new FormControl('');
 
-interface Message {
-  Id: number;
-  Name: string;
-  Message: string;
+  @ViewChild('text') text: ElementRef;
+
+  constructor(http: HttpClient, @Inject("BASE_URL") baseUrl: string,
+
+    protected chatService: ChatService
+  ) {
+    this.GetInfo();
+  }
+
+
+  public GetInfo() {
+    this.lstMessages = this.chatService.GetMessage();
+  }
+
+  public SendMessage() {
+    this.chatService.Add(this.nameControl.value, this.textControl.value);
+
+    setTimeout(() => {
+      this.GetInfo();
+    }, 300)
+
+    this.textControl.setValue('');
+    this.text.nativeElement.focus();
+  }
+
 }
